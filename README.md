@@ -1,7 +1,7 @@
 # Replicated-Concurrency-Control-and-Recovery-Project
 
-##Functions
+## Functions
 
-##readInput(inputString)
+## readInput(inputString)
 
 Reads in each line of input Returns list of operations
