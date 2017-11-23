@@ -5,7 +5,7 @@
 ### Read Input
 #### readInput(inputString)
 Reads in each line of input Returns list of operations
-### Processing Input
+### Process Input
 #### read(tNo, variable)
 Finds all copies of variable that are available (at alive sites)
 Checks which copies are not locked.
