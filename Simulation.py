@@ -12,12 +12,13 @@ for i in range(1,11):
 
 #TEST THE VARIABLES AND SITES
 
-for i in range(1,21):
+''''for i in range(1,21):
     print "VARIABLE : " + str(i)
     print "VARIABLE VALUE : " + str(variables[i].val)
-    print "VARIABLE LOCATIONS : " + str(variables[i].locs)
+    print "VARIABLE LOCATIONS : " + str(variables[i].locs)'''
 
 for i in range(1,11):
     print "SITE : " + str(i)
     print "VARIABLES STORED : " + str(sites[i].vars)
     print "VARIABLE VALUES : " + str(sites[i].vals)
+    print "CURRENT LOCKS : " + str(sites[i].locks)

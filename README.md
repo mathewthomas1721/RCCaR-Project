@@ -18,7 +18,7 @@ Writes value to all available sites.
 #### findAlive(variable)
 Finds all sites where copies of a variable are available. Returns a list of those sites.
 #### checkLocked(variable,site)
-Checks whether a variable is locked at a particular site. Returns Boolean value.
+Checks whether a variable is locked at a particular site. Returns -1 if not locked. Otherwise returns transaction number with lock.
 ### Transaction Scheduling
 #### enqueue(transaction,variable,sites)
 Enqueues a transaction if it needs to wait. Keeps track of the variable(s) it is waiting for.
