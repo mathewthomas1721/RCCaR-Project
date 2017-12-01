@@ -1,5 +1,5 @@
 from Checks import findAlive
-read(tNo,variable,sites,queue):
+def read(tNo,variable,sites,queue):
     allAlive = findAlive(variable,sites)
     for siteIndex in allAlive:
         if variable not in sites[siteIndex].exLocks:
@@ -7,7 +7,7 @@ read(tNo,variable,sites,queue):
             return sites[siteIndex].vals[variable], siteIndex
     queue.enqueue((0,tNo,variable))
 
-write(tNo,variable,value,sites,queue):
+def write(tNo,variable,value,sites,queue):
     allAlive = findAlive(variable,sites)
     for siteIndex in allAlive:
         if variable in sites[siteIndex].exLocks or variable in sites[siteIndex].sharedLocks:
