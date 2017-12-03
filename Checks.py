@@ -4,6 +4,9 @@ def findAlive(variable,sites):
         if site.alive == 1:
             if variable in site.vars :
                 availList.append(site.index)
+        elif site.alive == 0:
+            if variable in site.nonReplicatedVars:
+                    availList.append(site.index)    
     return availList
 
 def checkLocked(variable,site):

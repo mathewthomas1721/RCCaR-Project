@@ -52,5 +52,5 @@ class Queue:
             if transaction.startTime<minStart:
                 minTrans = transaction.tNo
                 minStart = transaction.startTime
-        self.items = [x for x in a if x[1] == minTrans]
+        self.items = [x for x in self.items if x[1] != minTrans]
         return minTrans

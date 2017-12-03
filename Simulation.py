@@ -14,19 +14,20 @@ for i in range(10):
 
 #TEST THE VARIABLES AND SITES
 queue = Queue()
-'''
+
 for i in range(1,21):
-    print "VARIABLE : " + str(i)
+    print "\nVARIABLE : " + str(i)
     print "VARIABLE VALUE : " + str(variables[i].val)
-    print "VARIABLE LOCATIONS : " + str(variables[i].locs)'''
-'''
-for i in range(1,11):
-    print "SITE : " + str(i)
-    print "VARIABLES STORED : " + str(sites[i].vars)
-    print "VARIABLE VALUES : " + str(sites[i].vals)
+    print "VARIABLE LOCATIONS : " + str(variables[i].locs)
+
+for i in range(10):
+    print "\nSITE : " + str(sites[i].index)
+    print " REPLICATED VARIABLES STORED : " + str(sites[i].replicatedVars)
+    print " NON - REPLICATED VARIABLES STORED : " + str(sites[i].nonReplicatedVars)
+    '''print "VARIABLE VALUES : " + str(sites[i].vals)
     print "EX LOCKS : " + str(sites[i].exLocks)
-    print "SHARED LOCKS : " + str(sites[i].sharedLocks)
-'''
+    print "SHARED LOCKS : " + str(sites[i].sharedLocks)'''
+
 '''
 print(read(1,1,sites,queue))
 '''
