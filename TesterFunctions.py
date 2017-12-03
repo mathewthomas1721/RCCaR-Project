@@ -22,13 +22,27 @@ def dump(sites,variables):
 
 def fail(siteIndex, sites):
     for site in sites:
-        if site.index = siteIndex:
+        if site.index == siteIndex:
             site.alive = -1
             for item in site.exLocks:
                 site.exLocks[i] = -1
             for item in site.sharedLocks:
                 site.sharedLocks[i] = []
+            self.unavailable = list(self.replicatedVars)
             break
 
-def recover(siteIndex, sites, variables,queue):
-    
+def recover(siteIndex, sites, variables):
+    for site in sites:
+        if site.index == siteIndex:
+            for variable in site.unavailable:
+                readValue = recoverRead(variable,sites)
+                if readValue[1] != -1 :
+                    recoverWrite(variable,value,site)
+                    site.unavailable.remove(variable)
+
+            if site.unavailable == []:
+                site.alive = 1
+                return 1
+            else:
+                site.alive = 0
+                return -1        

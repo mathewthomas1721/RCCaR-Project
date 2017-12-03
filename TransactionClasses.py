@@ -7,7 +7,7 @@ class Transaction :
         self.sharedLocks = {}
         self.endTime = -1 #use to
 
-    def endTranscation(self,tick,sites):
+    def endTransaction(self,tick,sites):
 
         for site in self.exLocks:
             currSite = sites[site]
@@ -20,5 +20,5 @@ class Transaction :
                 currSite.sharedLocks[variable].remove(self.tNo)
         self.exLocks = {}
         self.sharedLocks = {}
-        self.endTime = tick        
+        self.endTime = tick
         print "Locks Released"

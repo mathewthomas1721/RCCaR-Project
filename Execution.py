@@ -17,9 +17,15 @@ for i in range(1,11):
 queue = Queue()
 tick = 0
 transactions = {}
-
+recoveryQueue = []
 for line in sys.stdin:
     tick = tick+1
+    for item in recoveryQueue:
+        recoveryStatus = recover(item, sites, variables)
+        if recoveryStatus == -1:
+            print "Can't recover yet, will try in subsequent ticks"
+            recoveryQueue.append(op[1])
+            
     op = readInput(line)
 
     '''
@@ -64,10 +70,13 @@ for line in sys.stdin:
         dump(sites,op[1])
 
     elif op[0] == 7:
-        transactions[op[1]].endTranscation(tick,sites)
+        transactions[op[1]].endTransaction(tick,sites)
 
     elif op[0] == 8:
-        print "NOT YET"
+        fail(op[1], sites)
 
     elif op[0] == 9:
-        print "NOT YET"
+        recoveryStatus = recover(op[1], sites, variables)
+        if recoveryStatus == -1:
+            print "Can't recover yet, will try in subsequent ticks"
+            recoveryQueue.append(op[1])

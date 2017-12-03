@@ -9,6 +9,7 @@ class Site:
         self.alive = 1
         self.nonReplicatedVars = []
         self.replicatedVars = []
+        self.unavailable = []
         for i in range(1,numVar+1):
             if i%2 == 0:
                 self.vars.append(i)
