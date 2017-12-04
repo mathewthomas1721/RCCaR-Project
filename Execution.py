@@ -6,6 +6,7 @@ from ProcessInput import read, write
 from TransactionScheduling import Queue
 from Checks import findAlive, checkLocked
 from TransactionClasses import Transaction
+from TesterFunctions import dump, fail, recover
 
 variables = []
 variables.append(-1)
@@ -14,19 +15,26 @@ for i in range(1,21):
 sites = []
 for i in range(1,11):
     sites.append(Site(i,20,variables))
+
+
 queue = Queue()
 tick = 0
 transactions = {}
 recoveryQueue = []
+
+print("\nDefault Variable Values and Sites Created\n")
 for line in sys.stdin:
+    print line
     tick = tick+1
     for item in recoveryQueue:
+        print("\nAttempting Recovery on items in Recovery Queue\n")
         recoveryStatus = recover(item, sites, variables)
         if recoveryStatus == -1:
             print "Can't recover yet, will try in subsequent ticks"
             recoveryQueue.append(op[1])
-            
+
     op = readInput(line)
+    print op
 
     '''
     begin(Tn) -> (0,n)
@@ -41,12 +49,15 @@ for line in sys.stdin:
     recover(n) -> (9,n)
     '''
     if op[0] == 0 :
+        print("\nTransaction Creation Started\n")
         transactions[op[1]] = Transaction(op[1],tick)
 
     elif op[0] == 1:
+        print("\nRO Transaction Creation Started\n")
         transactions[op[1]] = Transaction(op[1],tick)
 
     elif op[0] == 2:
+        print("\nRead Started\n")
         res = read(transactions[op[1]],op[2],sites,queue)
         if res[0] != -1:
             print "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
@@ -54,6 +65,7 @@ for line in sys.stdin:
             print "\nCouldn't Read x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
 
     elif op[0] == 3:
+        print("\nWrite Started\n")
         res = write(transactions[op[1]],op[2],op[3],sites,queue)
         if res == 1:
             print "\n Write Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
@@ -61,21 +73,29 @@ for line in sys.stdin:
             print "\nCouldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
 
     elif op[0] == 4:
+        print("\nDump all variables started\n")
         dump(sites,-1)
 
     elif op[0] == 5:
-        dump([sites[op[1]+1]],-1)
+        print("\nDump all variables at site " + str(op[1])+" started\n")
+        dump([sites[op[1]-1]],-1)
 
     elif op[0] == 6:
+        print("\nDump variable x" + str(op[1]) + " at all sites started\n")
         dump(sites,op[1])
 
     elif op[0] == 7:
-        transactions[op[1]].endTransaction(tick,sites)
+        print("\nEnding Transaction " + str(op[1])+ "\n")
+        transaction = transactions[op[1]]
+        transaction.endTransaction(tick,sites)
+
 
     elif op[0] == 8:
+        print("\nFailing Site " + str(op[1]) + "\n")
         fail(op[1], sites)
 
     elif op[0] == 9:
+        print("\nRecovering Site " + str(op[1]) + "\n")
         recoveryStatus = recover(op[1], sites, variables)
         if recoveryStatus == -1:
             print "Can't recover yet, will try in subsequent ticks"

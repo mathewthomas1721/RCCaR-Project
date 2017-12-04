@@ -32,7 +32,7 @@ def readInput(inputString):
             item = item.split(',')
             tup = (3,int(item[0]),int(item[1][1:]),int(item[2]))
         elif 'dump()' in item:
-            tup = (4)
+            tup = (4,-1)
         elif 'dump(x' in item:
             tup = (6,int(item[6:len(item)-1]))
         elif 'dump(' in item:
@@ -49,6 +49,6 @@ def readInput(inputString):
             tup = (9,int(item))
         else :
             print "INVALID OPERATION : " + item
-        ops.append(tup)
 
-    return ops
+
+    return tup
