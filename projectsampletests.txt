@@ -124,7 +124,7 @@ R(T2,x3)
 end(T2)
 end(T3)
 
-// Test 9 HEY
+// Test 9 TEST
 // T1, T2, T3 ok. T3 waits and then complete after T2 commits
 begin(T3)
 begin(T1)
@@ -197,7 +197,7 @@ end(T2)
 
 
 
-// Test 15
+// Test 15 HEY
 
 // T1 will abort because x4 is on site 2 and  so
 // site 2 will lose its locks in the fail event.
@@ -221,7 +221,7 @@ end(T3)
 end(T4)
 end(T5)
 
-// Test 16
+// Test 16 HEY
 // T3 must wait till the commit of T2 before it reads x4
 // (because of locking), so sees 44.
 // T1 reads x2=22 at site1
@@ -238,7 +238,7 @@ R(T1,x2)
 end(T1)
 
 
-// Test 17
+// Test 17 HEY
 // T3 must wait till the commit of T2 before it reads x4
 // (because of locking), so sees 44.
 // T3 must abort though because the lock information is lost on site 4
@@ -257,7 +257,7 @@ end(T3)
 R(T1,x2)
 end(T1)
 
-// Test 18
+// Test 18 HEY
 // A circular deadlock scenario
 // T5 as the youngest will abort, allowing T4 to complete, then T3, T2, and T1.
 // Only T5s write will not succeed. All others will succeed
@@ -283,7 +283,7 @@ end(T2)
 end(T1)
 
 
-// Test 19
+// Test 19 HEY
 // An almost circular deadlock scenario with failures.
 // T3 fails (T2 and T4 do not fail because the site is up when they execute)
 // because site 4 fails.

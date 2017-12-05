@@ -101,8 +101,17 @@ for line in sys.stdin:
                     print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
 
             elif op[0] == 2:
-                print("Tick = " + str(tick) + " Ending Transaction " + str(op[1])+ "\n")
-                transactions[op[1]].commit(tick,sites)
+                stillWaiting = 0
+                for item in queue.items:
+                    if item[1] == op[1]:
+                        stillWaiting = 1
+                        break
+                if stillWaiting == 1:
+                    queue.enqueue(op)
+                else:
+                    print("Tick = " + str(tick) + " Ending Transaction " + str(op[1])+ "\n")
+                    transactions[op[1]].commit(tick,sites)
+
     waitingTransactions = []
     for item in queue.items:
         waitingTransactions.append(item[1])
@@ -269,3 +278,14 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
                     queue.enqueue(op)
                 else :
                     print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
+            elif op[0] == 2:
+                stillWaiting = 0
+                for item in queue.items:
+                    if item[1] == op[1]:
+                        stillWaiting = 1
+                        break
+                if stillWaiting == 1:
+                    queue.enqueue(op)
+                else:
+                    print("Tick = " + str(tick) + " Ending Transaction " + str(op[1])+ "\n")
+                    transactions[op[1]].commit(tick,sites)
