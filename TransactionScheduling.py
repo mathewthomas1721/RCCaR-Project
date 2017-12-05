@@ -1,3 +1,5 @@
+from Checks import findAlive, checkLocked
+
 class Queue:
     def __init__(self):
         self.items = []
@@ -14,8 +16,8 @@ class Queue:
     def size(self):
         return len(self.items)
 
-    def dfsCycleCheck(graph, start, end):
-        print("\nCHECKING FOR CYCLES\n")
+    def dfsCycleCheck(self, graph, start, end):
+        #print("\nCHECKING FOR CYCLES\n")
         fringe = [(start, [])]
         while fringe:
             state, path = fringe.pop()
@@ -28,32 +30,35 @@ class Queue:
                 fringe.append((next_state, path+[next_state]))
 
     def deadlock(self,sites):
-        print("\nCHECKING FOR DEADLOCK\n")
+        #print("\nCHECKING FOR DEADLOCK\n")
         requirementsGraph = {}
         for item in self.items:
             rw = item[0]
-            variable = item[2]
-            locations = Checks.findAlive(variable,sites)
-            reqs = []
-            for loc in locations :
-                locks = checkLocked(variable,loc)
-                if locks[0] != -1: #no locks on this variable
-                    if rw == 1: #all locks for a write operation
-                        reqs.append(locks[1])
-                    elif locks[0] == 1 : #only write locks for read operations
-                        reqs.append(locks[1])
-            requirementsGraph[item[1]] = reqs #all the transactions that are blocking each transaction in the queue
+            if rw != 2:
+                variable = item[2]
+                locations = findAlive(variable,sites)
+                reqs = []
+                for loc in locations :
+                    locks = checkLocked(variable,sites[loc-1])
+                    if locks[0] != -1: #no locks on this variable
+                        if rw == 1: #all locks for a write operation
+                            reqs = reqs + locks[1]
+                        elif locks[0] == 1 : #only write locks for read operations
+                            reqs = reqs + locks[1]
 
-        cycles = [[node]+path  for node in requirementsGraph for path in dfsCycleCheck(requirementsGraph, node, node)]
+                requirementsGraph[item[1]] = list(set(reqs)) #all the transactions that are blocking each transaction in the queue
+
+        #print requirementsGraph
+        cycles = [[node]+path  for node in requirementsGraph for path in self.dfsCycleCheck(requirementsGraph, node, node)]
         return cycles
 
     def breakDeadlock(self,transactions):
-        print("\nBREAKING DEADLOCK\n")
+        #print("\nBREAKING DEADLOCK\n")
         minTrans = -1
-        minStart = 10000000
+        maxStart = 0
         for transaction in transactions :
-            if transaction.startTime<minStart:
+            if transaction.startTime>maxStart:
                 minTrans = transaction.tNo
-                minStart = transaction.startTime
+                maxStart = transaction.startTime
         self.items = [x for x in self.items if x[1] != minTrans]
         return minTrans

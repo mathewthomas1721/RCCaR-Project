@@ -16,12 +16,12 @@ for i in range(10):
 queue = Queue()
 
 for i in range(1,21):
-    print "\nVARIABLE : " + str(i)
+    print "\n\nVARIABLE : " + str(i)
     print "VARIABLE VALUE : " + str(variables[i].val)
     print "VARIABLE LOCATIONS : " + str(variables[i].locs)
 
 for i in range(10):
-    print "\nSITE : " + str(sites[i].index)
+    print "\n\nSITE : " + str(sites[i].index)
     print " REPLICATED VARIABLES STORED : " + str(sites[i].replicatedVars)
     print " NON - REPLICATED VARIABLES STORED : " + str(sites[i].nonReplicatedVars)
     '''print "VARIABLE VALUES : " + str(sites[i].vals)

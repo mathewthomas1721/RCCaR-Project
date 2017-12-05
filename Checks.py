@@ -1,5 +1,5 @@
 def findAlive(variable,sites):
-    print "\nfindAlive called on " + str(variable) + "\n"
+    #print "\nfindAlive called on " + str(variable)
     availList = []
     for site in sites:
         if site.alive == 1:
@@ -8,10 +8,11 @@ def findAlive(variable,sites):
         elif site.alive == 0:
             if variable in site.nonReplicatedVars:
                     availList.append(site.index)
+    #print "Sites With the variable : " + str(availList)
     return availList
 
 def checkLocked(variable,site):
-    print "\ncheckLocked called on " + str(variable) + "at site " + str(site.index) + "\n" 
+    #print "\ncheckLocked called on " + str(variable) + " at site " + str(site.index)
     xclusive = site.exLocks[variable]
     shared = site.sharedLocks[variable]
     if xclusive != -1:
