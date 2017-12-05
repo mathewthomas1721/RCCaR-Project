@@ -53,6 +53,8 @@ for line in sys.stdin:
                 deadlockedTransactions.append(transactions[item])
 
             toAbort = queue.breakDeadlock(deadlockedTransactions)
+            abortedTransactions.append(toAbort)
+            abortedTransactions = list(set(abortedTransactions))
             print "ABORTING T" + str(toAbort)
             transactions[toAbort].endTransaction(tick,sites)
             abortedTransactions.append(toAbort)
@@ -217,6 +219,8 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
                 deadlockedTransactions.append(transactions[item])
 
             toAbort = queue.breakDeadlock(deadlockedTransactions)
+            abortedTransactions.append(toAbort)
+            abortedTransactions = list(set(abortedTransactions))
             print "ABORTING T" + str(toAbort)
             transactions[toAbort].endTransaction(tick,sites)
 
