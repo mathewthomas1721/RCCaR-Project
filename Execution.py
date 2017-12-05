@@ -35,9 +35,9 @@ for line in sys.stdin:
     for item in recoveryQueue:
         #print("Tick = " + str(tick) + " Attempting Recovery on item in Recovery Queue" + str(item))
         recoveryStatus = recover(item, sites, variables)
-        if recoveryStatus == -1:
+        if recoveryStatus != 1:
             #print "Can't recover yet, will try in subsequent ticks"
-            tempRecovery.append(op[1])
+            tempRecovery.append(item)
 
     recoveryQueue = list(tempRecovery)
     queue.items = list(set(queue.items))
@@ -200,9 +200,9 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
     for item in recoveryQueue:
         #print("Tick = " + str(tick) + " Attempting Recovery on item in Recovery Queue" + str(item))
         recoveryStatus = recover(item, sites, variables)
-        if recoveryStatus == -1:
+        if recoveryStatus != 1:
             #print "Can't recover yet, will try in subsequent ticks"
-            tempRecovery.append(op[1])
+            tempRecovery.append(item)
 
     recoveryQueue = list(tempRecovery)
 

@@ -1,13 +1,13 @@
 
 
-// Test 1.
+// Test 1. HEY
 // T2 should abort, T1 should not, because of kill youngest
 
 begin(T1)
 begin(T2)
-W(T1,x1,101) 
+W(T1,x1,101)
 W(T2,x2,202)
-W(T1,x2,102) 
+W(T1,x2,102)
 W(T2,x1,201)
 end(T1)
 dump()
@@ -17,17 +17,17 @@ x1: 101 at site 2
 x2: 102 at all sites
 All other variables have their initial values.
 
-// Test 2
+// Test 2 HEY
 // No aborts happens, since read-only transactions use
 // multiversion read protocol.
 
 begin(T1)
 beginRO(T2)
-W(T1,x1,101) 
+W(T1,x1,101)
 R(T2,x2)
-W(T1,x2,102) 
+W(T1,x2,102)
 R(T2,x1)
-end(T1) 
+end(T1)
 end(T2)
 dump()
 
@@ -36,21 +36,21 @@ x1: 101 at site 2
 x2: 102 at all sites
 All other variables have their initial values.
 
-// Test 3
+// Test 3 HEY
 // T1 should not abort because its site did not fail.
 // In fact all transactions commit
 begin(T1)
 begin(T2)
 R(T1,x3)
 fail(2)
-W(T2,x8,88) 
+W(T2,x8,88)
 R(T2,x3)
 W(T1, x5,91)
 end(T2)
 recover(2)
 end(T1)
 
-// Test 4
+// Test 4 HEY
 // Now T1 aborts, since site 2 died after T1 accessed it. T2 ok.
 // Normally, we wait till the end(T1) to abort T1.
 // However, it is ok to abort T1 right away when fail(2) happens. Both
@@ -59,20 +59,20 @@ begin(T1)
 begin(T2)
 R(T1,x1)
 fail(2)
-W(T2,x8,88) 
+W(T2,x8,88)
 R(T2,x3)
 R(T1, x5)
 end(T2)
 recover(2)
 end(T1)
 
-// Test 5
+// Test 5 HEY
 // T1 fails again here because it wrote to a site that failed. T2 ok.
 begin(T1)
 begin(T2)
 W(T1,x6,66)
 fail(2)
-W(T2,x8,88) 
+W(T2,x8,88)
 R(T2,x3)
 R(T1, x5)
 end(T2)
@@ -80,17 +80,17 @@ recover(2)
 end(T1)
 
 
-// Test 6
+// Test 6 HEY
 // T1 ok. T2 ok. T2 reads from a recovering site, but odd variables only
 // at that site
 begin(T1)
 begin(T2)
-fail(3) 
+fail(3)
 fail(4)
 R(T1,x1)
 W(T2,x8,88)
 end(T1)
-recover(4) 
+recover(4)
 recover(3)
 R(T2,x3)
 end(T2)
@@ -125,7 +125,7 @@ end(T2)
 end(T3)
 
 // Test 9
-// T1, T2, T3 ok. T3 waits and then comlete after T2 commits 
+// T1, T2, T3 ok. T3 waits and then comlete after T2 commits
 begin(T3)
 begin(T1)
 begin(T2)
@@ -199,7 +199,7 @@ end(T2)
 
 // Test 15
 
-// T1 will abort because x4 is on site 2 and  so 
+// T1 will abort because x4 is on site 2 and  so
 // site 2 will lose its locks in the fail event.
 // So T1 will abort. T2 will be fine as will the others.
 
@@ -241,7 +241,7 @@ end(T1)
 // Test 17
 // T3 must wait till the commit of T2 before it reads x4
 // (because of locking), so sees 44.
-// T3 must abort though because the lock information is lost on site 4 
+// T3 must abort though because the lock information is lost on site 4
 // upon failure
 // T1 reads the initial value of x2 because T3 has aborted.
 
@@ -311,5 +311,3 @@ end(T4)
 end(T3)
 end(T2)
 end(T1)
-
-
