@@ -1,4 +1,11 @@
 '''
+readInput(inputString)
+
+Reads input line by line from the file and translates it for processing.
+
+Output : A variable length tuple is returned. Each type of instruction
+corresponds to a particular tuple type as shown below.
+
 begin(Tn) -> (0,n)
 beginRO(Tn) -> (1,n)
 R(Tn,xm) -> (2,n,m)
@@ -9,6 +16,7 @@ dump(xj) -> (6,j)
 end(Tn) -> (7,n)
 fail(n) -> (8,n)
 recover(n) -> (9,n)
+
 '''
 
 def readInput(inputString):

@@ -37,6 +37,7 @@ for line in sys.stdin:
         waitingTransactions.append(item[1])
     waitingTransactions = list(set(waitingTransactions))
     tick = tick+1
+    print "TICK : " + str(tick)
     #print "RECOVERY QUEUE"
     #print recoveryQueue
     recoveryQueue = list(set(recoveryQueue))
@@ -109,33 +110,20 @@ for line in sys.stdin:
                 if stillWaiting == 1:
                     queue.enqueue(op)
                 else:
-                    print("Tick = " + str(tick) + " Ending Transaction " + str(op[1])+ "\n")
+                    print("Ending Transaction " + str(op[1])+ "\n")
                     transactions[op[1]].commit(tick,sites)
 
     waitingTransactions = []
     for item in queue.items:
         waitingTransactions.append(item[1])
     waitingTransactions = list(set(waitingTransactions))
-    print("\nTick = " + str(tick) + " " + line)
+    print("\n"+line)
     op = readInput(line)
     #print("Tick = " + str(tick) + " Operation Read : " + str(op))
 
-    '''
-    begin(Tn) -> (0,n)
-    beginRO(Tn) -> (1,n)
-    R(Tn,xm) -> (2,n,m)
-    W(Tn,xm,v) -> (3,n,m,v)
-    dump() -> (4)
-    dump(i) -> (5,i)
-    dump(xj) -> (6,j)
-    end(Tn) -> (7,n)
-    fail(n) -> (8,n)
-    recover(n) -> (9,n)
-    '''
-    '''print "ABORTED TRANSACTIONS"
-    print abortedTransactions'''
+
     if op[0] in [2,3,7] and op[1] in abortedTransactions:
-        print "Tick = " + str(tick) + " Operation Skipped, Transaction already aborted"
+        print "Operation Skipped, Transaction already aborted"
     elif op[0] in [2,3,7] and op[1] in waitingTransactions:
         if op[0] == 2:
             queue.enqueue((0,op[1],op[2]))
@@ -144,15 +132,15 @@ for line in sys.stdin:
         else :
             queue.enqueue((2,op[1]))
 
-        print "Tick = " + str(tick) + " Operation Skipped, Transaction waiting"
+        print "\nOperation Skipped, Transaction is Waiting"
 
     elif op[0] == 0 :
-        print("Tick = " + str(tick) + " Transaction Creation Started")
+        print("\nTransaction Creation Started")
         transactions[op[1]] = Transaction(op[1],tick)
 
 
     elif op[0] == 1:
-        print("Tick = " + str(tick) + " RO Transaction Creation Started")
+        print("\nRO Transaction Creation Started")
         transactions[op[1]] = Transaction(op[1],tick)
         transactions[op[1]].RO = 1
         for i in range (10):
@@ -184,30 +172,30 @@ for line in sys.stdin:
             #waitingTransactions.append(op[1])
 
     elif op[0] == 4:
-        print("Tick = " + str(tick) + " Dump all variables started\n")
+        print("\nDump of all variables started\n")
         dump(sites,-1)
 
     elif op[0] == 5:
-        print("Tick = " + str(tick) + " Dump all variables at site " + str(op[1])+" started\n")
+        print("\nDump of all variables at site " + str(op[1])+" started\n")
         dump([sites[op[1]-1]],-1)
 
     elif op[0] == 6:
-        print("Tick = " + str(tick) + " Dump variable x" + str(op[1]) + " at all sites started\n")
+        print("\nDump of variable x" + str(op[1]) + " at all sites started\n")
         dump(sites,op[1])
 
     elif op[0] == 7:
-        print("Tick = " + str(tick) + " Ending Transaction " + str(op[1])+ "\n")
+        print("\nEnding Transaction " + str(op[1])+ "\n")
         transactions[op[1]].commit(tick,sites)
 
 
     elif op[0] == 8:
-        print("Tick = " + str(tick) + " Failing Site " + str(op[1]) + "\n")
+        print("\nFailing Site " + str(op[1]) + "\n")
         resAborted = fail(op[1], sites,transactions,tick)
         abortedTransactions = abortedTransactions + resAborted
         abortedTransactions = list(set(abortedTransactions))
 
     elif op[0] == 9:
-        print("Tick = " + str(tick) + " Recovering Site " + str(op[1]) + "\n")
+        print("\nRecovering Site " + str(op[1]))
         recoveryStatus = recover(op[1], sites, variables)
         if recoveryStatus == -1:
             print "Can't recover yet, will try in subsequent ticks"
@@ -246,7 +234,7 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
             toAbort = queue.breakDeadlock(deadlockedTransactions)
             abortedTransactions.append(toAbort)
             abortedTransactions = list(set(abortedTransactions))
-            print "ABORTING T" + str(toAbort)
+            print "\nABORTING T" + str(toAbort)
             transactions[toAbort].endTransaction(tick,sites)
 
             #print "REMOVING ABORTED TRANSACTION T" + str(toAbort)
@@ -287,5 +275,5 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
                 if stillWaiting == 1:
                     queue.enqueue(op)
                 else:
-                    print("Tick = " + str(tick) + " Ending Transaction " + str(op[1])+ "\n")
+                    print("\nEnding Transaction " + str(op[1])+ "\n")
                     transactions[op[1]].commit(tick,sites)

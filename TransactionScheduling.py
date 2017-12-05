@@ -1,8 +1,84 @@
 from Checks import findAlive, checkLocked
 
+'''
+class Queue
+
+A simple queue implementation to simulate a waiting queues for
+transactions/operations that are forced to wait.
+
+items : all operations in the waiting queue. Operations are in the form
+of tuples :
+
+(0,tNo,variable)) -> Corresponds to a read operation from a transaction "tNo"
+for "variable"
+
+(1,transaction.tNo,variable,value) -> Corresponds to a write operation from
+a transaction "tNo" for writing "value" to "variable"
+
+(2,tNo) -> Corresponds to an end() for a transaction "tNo"
+
+'''
+
+'''
+isEmpty()
+
+Checks whether the waiting queue is empty
+
+Output : Returns True if empty, False if not
+'''
+
+'''
+enqueue(item)
+
+Adds an item to the waiting queue
+'''
+
+'''
+dequeue()
+
+Pops an item from the waiting queue
+
+Output : returns the popped item
+'''
+
+'''
+size()
+
+Finds the length of the waiting queue
+
+Output : Returns the length of the waiting queue
+
+'''
+
+'''
+dfsCycleCheck(graph, start, end)
+
+Checks if there is a cycle in a path from "start" to "end" in "graph"
+
+Output : Returns any cycle in the path from "start" to "end"
+
+'''
+
+'''
+deadlock(self,sites)
+
+Checks for any deadlocks in the waiting queue
+
+Output : Returns a list of any cycles present in the graph
+'''
+
+'''
+breakDeadlock(transactions)
+
+Returns the youngest transaction in the deadlock cycle, which will be terminated
+to break the deadlock
+
+Output : Returns tNo of the youngest transaction in the deadlock cycle
+'''
 class Queue:
     def __init__(self):
         self.items = []
+
 
     def isEmpty(self):
         return self.items == []
@@ -10,11 +86,17 @@ class Queue:
     def enqueue(self, item):
         self.items.insert(0,item)
 
+
+
     def dequeue(self):
         return self.items.pop()
 
+
+
     def size(self):
         return len(self.items)
+
+
 
     def dfsCycleCheck(self, graph, start, end):
         #print("\nCHECKING FOR CYCLES\n")
@@ -30,6 +112,8 @@ class Queue:
                 if next_state in path:
                     continue
                 fringe.append((next_state, path+[next_state]))
+
+
 
     def deadlock(self,sites):
         #print("\nCHECKING FOR DEADLOCK\n")

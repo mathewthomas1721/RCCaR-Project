@@ -1,4 +1,17 @@
 from ProcessInput import recoverRead, recoverWrite
+
+'''
+dump(sites,variable)
+
+Displays variable values based on parameters.
+
+dump(sites, -1) - Displays all variable values for all sites
+dump([site],-1) - Displays all variable values at a particular site
+dump(sites, variable)  - Displays all values for a particular variable at
+all sites
+dump([site], variable) - Diplays value of variable at a particular site
+'''
+
 def dump(sites,variable):
     if variable == -1:
 
@@ -25,6 +38,15 @@ def dump(sites,variable):
             print("DUMPING VARIABLE VALUE AT PARTICULAR SITE\n")
             print "\n\nSITE : " + str(sites[0].index)
             print "VARIABLE x" + str(variable) + " VALUE : " + str(sites[0].vals[variable])
+
+'''
+fail(siteIndex, sites,transactions,tick)
+
+Fails a specific site, essentially simulating a server failure.
+
+Output : Returns a list of transactions that are aborted as a result of
+the failure
+'''
 
 def fail(siteIndex, sites,transactions,tick):
     print("FAILING A PARTICULAR SITE")
@@ -54,8 +76,17 @@ def fail(siteIndex, sites,transactions,tick):
     aborted = list(set(aborted))
     #print aborted
     return aborted
+
+'''
+recover(siteIndex, sites, variables)
+
+Recovers a previously failed site
+
+Output : Returns 1 if the site has all variables available for access
+Returns -1 if only non-replicated data is available for access
+'''
 def recover(siteIndex, sites, variables):
-    print("RECOVERING A PARTICULAR SITE")
+    print("RECOVERING SITE" + str(siteIndex))
     for site in sites:
         if site.index == siteIndex:
             for variable in site.unavailable:

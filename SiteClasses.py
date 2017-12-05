@@ -1,3 +1,24 @@
+'''
+class Site
+
+Each instance of Site corresponds to a site.
+
+Data Items :
+
+index : Site index
+vars : Variables stored at site
+vals : Values of variables stored at site
+exLocks : Exclusive locks on variables at site
+sharedLocks : Shared locks on variables at site
+alive : Whether site is alive or not :
+        1 -> alive
+        -1 -> not alive
+        0 -> non-replicated items available
+nonReplicatedVars : list of non-replicated variables at site
+replicatedVars : list of replicated variables at site
+unavailable : list of unavailable variables at site       
+'''
+
 class Site:
 
     def __init__(self, index, numVar,varVals):

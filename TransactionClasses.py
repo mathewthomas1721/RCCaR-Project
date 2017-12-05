@@ -1,3 +1,40 @@
+'''
+class Transaction
+
+Maintains information about individual transactions.
+
+startTime : Time at which transaction starts
+tNo : Transaction Number
+exLocks : All exclusive locks that the transaction holds
+sharedLocks : All shared locks that the transaction holds
+opList : All operations that the transaction has performed
+endTime : Time at which the transaction ends, ie, aborts or commits
+RO : 1 if transaction is ReadOnly, -1 if not
+ReadValues : Values of variables when the transaction starts. Used only for
+ReadOnly transactions
+
+'''
+
+'''
+checkDone()
+
+Checks if the transaction has terminated
+
+Output : Returns False if the transaction is still executing
+Returns True if the transaction has terminated
+'''
+
+'''
+endTransaction(self,tick,sites)
+
+Terminates a transaction
+'''
+
+'''
+commit(self,tick,sites)
+
+Commits all operations carried out by the transaction to the database
+'''
 class Transaction :
 
     def __init__(self, tNo, tick):
@@ -10,11 +47,15 @@ class Transaction :
         self.RO = -1
         self.ReadValues = {}
 
+
+
     def checkDone():
         if self.endTime == -1:
             return False
         else:
             return True
+
+
 
     def endTransaction(self,tick,sites):
         #print("ENDING TRANSACTION T" + str(self.tNo))
@@ -37,8 +78,10 @@ class Transaction :
         self.endTime = tick
         #print "Locks Released"
 
+
+
     def commit(self,tick,sites):
-        
+
         for op in self.opList:
             variable = op[0]
             siteIndex = op[1] - 1

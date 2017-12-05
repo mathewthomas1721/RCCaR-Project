@@ -1,3 +1,10 @@
+'''
+class Variable:
+
+Each instance of Variable corresponds to a variable stored in the database
+
+'''
+
 class Variable:
     def __init__(self, index, numSites):
         self.index = index

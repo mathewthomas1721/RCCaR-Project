@@ -50,6 +50,24 @@ end(T2)
 recover(2)
 end(T1)
 
+// Test 3.5 HEY
+// T1 should not abort because its site did not fail.
+// The reason is that the W(T2,x8,88)
+// will not commit and is lost on failure.
+// Even though site 2 recovers before T2, T2 will not retroactively
+// write to the site (in any practical version of available copies).
+// T2 aborts because it wrote to x8.
+begin(T1)
+begin(T2)
+R(T1,x3)
+W(T2,x8,88)
+fail(2)
+R(T2,x3)
+W(T1, x5,91)
+recover(2)
+end(T2)
+end(T1)
+
 // Test 4 HEY
 // Now T1 aborts, since site 2 died after T1 accessed it. T2 ok.
 // Normally, we wait till the end(T1) to abort T1.
