@@ -1,6 +1,6 @@
 
 
-// Test 1. HEY
+// Test 1 HEY
 // T2 should abort, T1 should not, because of kill youngest
 
 begin(T1)
@@ -183,7 +183,7 @@ end(T3)
 end(T2)
 end(T1)
 
-// Test 14
+// Test 14 HEY
 // They wait in different orders from in the above test, but they all commit
 begin(T1)
 begin(T2)
@@ -283,7 +283,7 @@ end(T2)
 end(T1)
 
 
-// Test 18
+// Test 19
 // An almost circular deadlock scenario with failures.
 // T3 fails (T2 and T4 do not fail because the site is up when they execute)
 // because site 4 fails.

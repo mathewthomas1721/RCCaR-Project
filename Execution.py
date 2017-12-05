@@ -8,6 +8,11 @@ from Checks import findAlive, checkLocked
 from TransactionClasses import Transaction
 from TesterFunctions import dump, fail, recover
 
+def removeDup(seq):
+    seen = set()
+    seen_add = seen.add
+    return [x for x in seq if not (x in seen or seen_add(x))]
+
 variables = []
 variables.append(-1)
 for i in range(1,21):
@@ -44,7 +49,7 @@ for line in sys.stdin:
             tempRecovery.append(item)
 
     recoveryQueue = list(tempRecovery)
-    queue.items = list(set(queue.items))
+    queue.items = removeDup(queue.items)
     #print queue.items
     if queue.size()>1:
         #print queue.size()
@@ -71,7 +76,7 @@ for line in sys.stdin:
             #print "UPDATED WAITING QUEUE : "   + str(queue.items)
             break
             cycles = queue.deadlock(sites)
-    #print queue.items
+    print queue.items
     if queue.size()>0:
         #print "EXECUTING WAITING TRANSACTIONS"
         size = queue.size()
@@ -90,6 +95,7 @@ for line in sys.stdin:
             elif op[0] == 1:
                 res = write(transactions[op[1]],op[2],op[3],sites,queue)
                 if res == -1:
+                    print "WRITE FAILED : " + str(op[1])
                     queue.enqueue(op)
                 else :
                     print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
@@ -165,6 +171,7 @@ for line in sys.stdin:
             print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
         elif res == -1:
             print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
+            print queue.items
             #waitingTransactions.append(op[1])
 
     elif op[0] == 4:
@@ -215,7 +222,7 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
 
     recoveryQueue = list(tempRecovery)
 
-    queue.items = list(set(queue.items))
+    queue.items = removeDup(queue.items)
     if queue.size()>1:
         #print queue.size()
         #print("\nTick = " + str(tick) + " WAITING QUEUE : " + str(queue.items))
