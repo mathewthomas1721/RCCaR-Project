@@ -25,7 +25,6 @@ copies algorithm).
 Output : Returns an integer
 If a write is successful, 1 is returned
 If a write is unsuccessful, -1 is returned
-
 ####recoverRead(variable,sites)
 Attempts to read a particular variable from any alive site in order to
 perform a synchronizing write upon site recovery.
@@ -35,7 +34,6 @@ Output : Returns a tuple of the form (val,location)
 If a read is successful, val will be the returned value, and location will
 be the site from which the value is read.
 If a read is unsuccessful, val will be -1, and location will be -1
-
 ####recoverWrite(variable,value,site)
 Performs a synchronizing write for site recovery, to be used in tandem
 with recoverRead.
@@ -71,20 +69,16 @@ for "variable"
 a transaction "tNo" for writing "value" to "variable"
 
 (2,tNo) -> Corresponds to an end() for a transaction "tNo"
-
 ####isEmpty()
 Checks whether the waiting queue is empty
 
 Output : Returns True if empty, False if not
-
 ####enqueue(item)
 Adds an item to the waiting queue
-
 ####dequeue()
 Pops an item from the waiting queue
 
 Output : returns the popped item
-
 ####size()
 Finds the length of the waiting queue
 
