@@ -27,6 +27,10 @@ waitingTransactions = []
 #print("\nTick = " + str(tick) + " Default Variable Values and Sites Created")
 for line in sys.stdin:
     print "---------------------------------------------------------------------------------"
+    waitingTransactions = []
+    for item in queue.items:
+        waitingTransactions.append(item[1])
+    waitingTransactions = list(set(waitingTransactions))
     tick = tick+1
     #print "RECOVERY QUEUE"
     #print recoveryQueue
@@ -41,6 +45,7 @@ for line in sys.stdin:
 
     recoveryQueue = list(tempRecovery)
     queue.items = list(set(queue.items))
+    #print queue.items
     if queue.size()>1:
         #print queue.size()
         #print("\nTick = " + str(tick) + " WAITING QUEUE : " + str(queue.items))
@@ -66,7 +71,7 @@ for line in sys.stdin:
             #print "UPDATED WAITING QUEUE : "   + str(queue.items)
             break
             cycles = queue.deadlock(sites)
-
+    #print queue.items
     if queue.size()>0:
         #print "EXECUTING WAITING TRANSACTIONS"
         size = queue.size()
@@ -75,6 +80,7 @@ for line in sys.stdin:
             #print queue.items
             i = i+1
             op = queue.dequeue()
+            print op
             if op[0] == 0:
                 res = read(transactions[op[1]],op[2],sites,queue)
                 if res[1] == -1:
@@ -87,11 +93,14 @@ for line in sys.stdin:
                     queue.enqueue(op)
                 else :
                     print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
+
             elif op[0] == 2:
                 print("Tick = " + str(tick) + " Ending Transaction " + str(op[1])+ "\n")
                 transactions[op[1]].commit(tick,sites)
-
-
+    waitingTransactions = []
+    for item in queue.items:
+        waitingTransactions.append(item[1])
+    waitingTransactions = list(set(waitingTransactions))
     print("\nTick = " + str(tick) + " " + line)
     op = readInput(line)
     #print("Tick = " + str(tick) + " Operation Read : " + str(op))
@@ -148,7 +157,7 @@ for line in sys.stdin:
                 print "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
             else :
                 print "\nCouldn't Read x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
-                waitingTransactions.append(op[1])
+                #waitingTransactions.append(op[1])
     elif op[0] == 3:
         #print("\nTick = " + str(tick) + " Write Started : x" + str(op[2]) + " with value " + str(op[3]))
         res = write(transactions[op[1]],op[2],op[3],sites,queue)
@@ -156,7 +165,7 @@ for line in sys.stdin:
             print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
         elif res == -1:
             print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
-            waitingTransactions.append(op[1])
+            #waitingTransactions.append(op[1])
 
     elif op[0] == 4:
         print("Tick = " + str(tick) + " Dump all variables started\n")

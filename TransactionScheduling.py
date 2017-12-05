@@ -50,6 +50,10 @@ class Queue:
 
         #print requirementsGraph
         cycles = [[node]+path  for node in requirementsGraph for path in self.dfsCycleCheck(requirementsGraph, node, node)]
+        for cycle in cycles:
+            if len(set(cycle)) <= 1:
+                cycles.remove(cycle)
+
         return cycles
 
     def breakDeadlock(self,transactions):

@@ -97,7 +97,7 @@ end(T2)
 
 
 
-// Test 7
+// Test 7 HEY
 // T2 should read the initial version of x3 based on multiversion read
 // consistency.
 begin(T1)
@@ -109,7 +109,7 @@ end(T1)
 R(T2,x3)
 end(T2)
 
-// Test 8
+// Test 8 HEY
 // T2 still reads the initial value of x3
 // T3 still reads the value of x3 written by T1
 begin(T1)
@@ -124,7 +124,7 @@ R(T2,x3)
 end(T2)
 end(T3)
 
-// Test 9
+// Test 9 HEY
 // T1, T2, T3 ok. T3 waits and then comlete after T2 commits
 begin(T3)
 begin(T1)
@@ -137,7 +137,7 @@ end(T3)
 R(T1,x2)
 end(T1)
 
-// Test 10
+// Test 10 MAYBE
 // T3 should wait and should not abort
 begin(T1)
 begin(T2)
@@ -151,7 +151,7 @@ R(T1,x2)
 end(T1)
 
 
-// Test 11
+// Test 11 HEY
 // All should commit
 begin(T1)
 begin(T2)

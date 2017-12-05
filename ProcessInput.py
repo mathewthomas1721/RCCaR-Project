@@ -31,7 +31,7 @@ def write(transaction,variable,value,sites,queue):
         siteIndex = siteIndex-1
         #print sites[siteIndex].exLocks[variable]
         #print tNo
-        if (-1 != sites[siteIndex].exLocks[variable] and transaction.tNo != sites[siteIndex].exLocks[variable]) or sites[siteIndex].sharedLocks[variable] != []: #check if the transaction doesn't hold the exLock or any other lock exists
+        if (-1 != sites[siteIndex].exLocks[variable] and transaction.tNo != sites[siteIndex].exLocks[variable]) or (sites[siteIndex].sharedLocks[variable] != [] and sites[siteIndex].sharedLocks[variable] != [transaction.tNo]): #check if the transaction doesn't hold the exLock or any other lock exists
             #print "QUEUEING"
             queue.enqueue((1,transaction.tNo,variable,value))
             return -1
