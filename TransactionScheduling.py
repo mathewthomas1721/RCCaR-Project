@@ -18,12 +18,14 @@ class Queue:
 
     def dfsCycleCheck(self, graph, start, end):
         #print("\nCHECKING FOR CYCLES\n")
+        #print graph
         fringe = [(start, [])]
         while fringe:
             state, path = fringe.pop()
             if path and state == end:
                 yield path
                 continue
+            #print graph[state]
             for next_state in graph[state]:
                 if next_state in path:
                     continue
@@ -31,9 +33,11 @@ class Queue:
 
     def deadlock(self,sites):
         #print("\nCHECKING FOR DEADLOCK\n")
+        #print self.items
         requirementsGraph = {}
         for item in self.items:
             rw = item[0]
+
             if rw != 2:
                 variable = item[2]
                 locations = findAlive(variable,sites)
@@ -47,13 +51,19 @@ class Queue:
                             reqs = reqs + locks[1]
 
                 requirementsGraph[item[1]] = list(set(reqs)) #all the transactions that are blocking each transaction in the queue
-
+        endNodes = []
+        for node in requirementsGraph:
+            for item in requirementsGraph[node]:
+                if item not in requirementsGraph:
+                    endNodes.append(item)
+        for node in endNodes:
+            requirementsGraph[node] = []
         #print requirementsGraph
         cycles = [[node]+path  for node in requirementsGraph for path in self.dfsCycleCheck(requirementsGraph, node, node)]
         for cycle in cycles:
             if len(set(cycle)) <= 1:
                 cycles.remove(cycle)
-
+        #print cycles
         return cycles
 
     def breakDeadlock(self,transactions):

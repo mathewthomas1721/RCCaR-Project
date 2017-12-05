@@ -125,7 +125,7 @@ end(T2)
 end(T3)
 
 // Test 9 HEY
-// T1, T2, T3 ok. T3 waits and then comlete after T2 commits
+// T1, T2, T3 ok. T3 waits and then complete after T2 commits
 begin(T3)
 begin(T1)
 begin(T2)
@@ -161,7 +161,7 @@ W(T2,x2,10)
 end(T1)
 end(T2)
 
-// Test 12
+// Test 12 HEY
 // both commit
 begin(T1)
 begin(T2)
@@ -171,7 +171,7 @@ end(T1)
 W(T2,x2,10)
 end(T2)
 
-// Test 13
+// Test 13 HEY
 // T1 and T2 wait but eventually commit
 begin(T1)
 begin(T2)
