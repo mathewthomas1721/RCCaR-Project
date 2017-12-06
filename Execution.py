@@ -14,11 +14,12 @@ if len(sys.argv) > 2:
     if sys.argv[2] == "--verbose":
         verbose = 1
 
-def removeDup(seq):
+def removeDup(seq): #removes duplicates in a list, preserves order of list
     seen = set()
     seen_add = seen.add
     return [x for x in seq if not (x in seen or seen_add(x))]
 
+#Initializes Database
 variables = []
 variables.append(-1)
 for i in range(1,21):
@@ -35,7 +36,7 @@ recoveryQueue = []
 abortedTransactions = []
 waitingTransactions = []
 f = open(filename)
-#print("\nTick = " + str(tick) + " Default Variable Values and Sites Created")
+
 for line in f.readlines():
     print "---------------------------------------------------------------------------------"
     waitingTransactions = []
@@ -44,66 +45,63 @@ for line in f.readlines():
     waitingTransactions = list(set(waitingTransactions))
     tick = tick+1
     print "TICK : " + str(tick)
-    #print "RECOVERY QUEUE"
-    #print recoveryQueue
     recoveryQueue = list(set(recoveryQueue))
     tempRecovery = []
-    for item in recoveryQueue:
-        #print("Tick = " + str(tick) + " Attempting Recovery on item in Recovery Queue" + str(item))
+    for item in recoveryQueue: #Attempts to recover sites in the recovery queue
         recoveryStatus = recover(item, sites, variables)
         if recoveryStatus != 1:
-            #print "Can't recover yet, will try in subsequent ticks"
             tempRecovery.append(item)
-
     recoveryQueue = list(tempRecovery)
+
     queue.items = removeDup(queue.items)
-    #print queue.items
-    if queue.size()>1:
-        #print queue.size()
-        #print("\nTick = " + str(tick) + " WAITING QUEUE : " + str(queue.items))
+
+    if queue.size()>1: #Deadlock Check
         cycles = queue.deadlock(sites)
         while len(cycles) != 0:
+            if verbose == 1:
+                print "\nDeadlock Detected!"
             cycle = cycles[0]
             cycle = list(set(cycle))
             deadlockedTransactions = []
             for item in cycle:
                 deadlockedTransactions.append(transactions[item])
-
+            if verbose == 1:
+                print "\nBreaking Deadlock..."
             toAbort = queue.breakDeadlock(deadlockedTransactions)
             abortedTransactions.append(toAbort)
             abortedTransactions = list(set(abortedTransactions))
             print "ABORTING T" + str(toAbort)
-            transactions[toAbort].endTransaction(tick,sites)
+            transactions[toAbort].endTransaction(tick,sites) #Aborts youngest transaction in deadlock
             abortedTransactions.append(toAbort)
-            #print "REMOVING ABORTED TRANSACTION T" + str(toAbort)
-            for inQueue in queue.items:
+
+            for inQueue in queue.items: #Removes any operations from the aborted transaction from the waiting queue
                 if inQueue[1] == toAbort:
                     queue.items.remove(inQueue)
-            #print "REMOVED ABORTED TRANSACTION T" + str(toAbort)
-            #print "UPDATED WAITING QUEUE : "   + str(queue.items)
-            break
+            #break
             cycles = queue.deadlock(sites)
-    #print queue.items
-    if queue.size()>0:
-        #print "EXECUTING WAITING TRANSACTIONS"
+
+    if queue.size()>0: #Attempting to run waiting transactions
+
         size = queue.size()
         i = 0
         while not queue.isEmpty() and i<size:
-            #print queue.items
             i = i+1
             op = queue.dequeue()
-            print op
             if op[0] == 0:
                 res = read(transactions[op[1]],op[2],sites,queue)
                 if res[1] == -1:
+                    if verbose == 1:
+                        print "\nRead Failed : T" + str(op[1])
                     queue.enqueue(op)
                 else:
+                    if verbose == 1:
+                        print "\nRead Successful!"
                     print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
             elif op[0] == 1:
                 res = write(transactions[op[1]],op[2],op[3],sites,queue)
                 if res == -1:
                     if verbose == 1:
-                        print "WRITE FAILED : " + str(op[1])
+                        print "\nWrite Failed : T" + str(op[1])
                     queue.enqueue(op)
                 else :
                     if verbose == 1:
@@ -126,15 +124,15 @@ for line in f.readlines():
     for item in queue.items:
         waitingTransactions.append(item[1])
     waitingTransactions = list(set(waitingTransactions))
-    print("\n"+line)
+
+    print("\n"+line) #Execute the next operation in the operation list
     op = readInput(line)
-    #print("Tick = " + str(tick) + " Operation Read : " + str(op))
 
 
-    if op[0] in [2,3,7] and op[1] in abortedTransactions:
+    if op[0] in [2,3,7] and op[1] in abortedTransactions: #Checks if the operation is part of an aborted transaction
         if verbose == 1:
             print "Operation Skipped, Transaction has been aborted"
-    elif op[0] in [2,3,7] and op[1] in waitingTransactions:
+    elif op[0] in [2,3,7] and op[1] in waitingTransactions: #Checks if the operation is part of a waiting transaction
         if op[0] == 2:
             queue.enqueue((0,op[1],op[2]))
         elif op[0] == 3:
@@ -160,23 +158,25 @@ for line in f.readlines():
             for var in sites[i].vals:
                 if var not in transactions[op[1]].ReadValues:
                     transactions[op[1]].ReadValues[var] = (sites[i].vals[var],i+1)
-        #print transactions[op[1]].ReadValues
+
 
     elif op[0] == 2:
-        #print("Tick = " + str(tick) + " Read Started : x" + str(op[2]))
         if transactions[op[1]].RO == 1:
+            if verbose == 1:
+                print "\nRead Successful!"
             print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(transactions[op[1]].ReadValues[op[2]][0]) + "\nSite : " + str(transactions[op[1]].ReadValues[op[2]][1])
         else:
             res = read(transactions[op[1]],op[2],sites,queue)
 
             if res[0] != -1:
+                if verbose == 1:
+                    print "\nRead Successful!"
                 print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
             else :
                 if verbose == 1:
                     print "\nCouldn't Read x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
-                #waitingTransactions.append(op[1])
+
     elif op[0] == 3:
-        #print("\nTick = " + str(tick) + " Write Started : x" + str(op[2]) + " with value " + str(op[3]))
         res = write(transactions[op[1]],op[2],op[3],sites,queue)
         if res == 1:
             if verbose == 1:
@@ -184,8 +184,7 @@ for line in f.readlines():
         elif res == -1:
             if verbose == 1:
                 print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
-            #print queue.items
-            #waitingTransactions.append(op[1])
+
 
     elif op[0] == 4:
         if verbose == 1:
@@ -223,69 +222,66 @@ for line in f.readlines():
             if verbose == 1:
                 print "Can't recover yet, will try in subsequent ticks"
             recoveryQueue.append(op[1])
-    '''for site in sites:
-        print site.index, site.sharedLocks'''
 
 
-while not queue.isEmpty or len(recoveryQueue) != 0:
+while not queue.isEmpty() or len(recoveryQueue) != 0: #Continues running waiting transactions/site recoveries after all operations have been received
 
-    #print "RECOVERY QUEUE"
-    #print recoveryQueue
+    print "---------------------------------------------------------------------------------"
+    tick = tick+1
+    print "TICK : " + str(tick)
+
     recoveryQueue = list(set(recoveryQueue))
     tempRecovery = []
     for item in recoveryQueue:
-        #print("Tick = " + str(tick) + " Attempting Recovery on item in Recovery Queue" + str(item))
         recoveryStatus = recover(item, sites, variables)
         if recoveryStatus != 1:
-            #print "Can't recover yet, will try in subsequent ticks"
             tempRecovery.append(item)
 
     recoveryQueue = list(tempRecovery)
 
     queue.items = removeDup(queue.items)
     if queue.size()>1:
-        #print queue.size()
-        #print("\nTick = " + str(tick) + " WAITING QUEUE : " + str(queue.items))
         cycles = queue.deadlock(sites)
         while len(cycles) != 0:
+            if verbose == 1:
+                print "\nDeadlock Detected!"
             cycle = cycles[0]
             cycle = list(set(cycle))
             deadlockedTransactions = []
             for item in cycle:
                 deadlockedTransactions.append(transactions[item])
-
+            if verbose == 1:
+                print "\nBreaking Deadlock..."
             toAbort = queue.breakDeadlock(deadlockedTransactions)
             abortedTransactions.append(toAbort)
             abortedTransactions = list(set(abortedTransactions))
             print "\nABORTING T" + str(toAbort)
             transactions[toAbort].endTransaction(tick,sites)
 
-            #print "REMOVING ABORTED TRANSACTION T" + str(toAbort)
             for inQueue in queue.items:
                 if inQueue[1] == toAbort:
                     queue.items.remove(inQueue)
-            #print "REMOVED ABORTED TRANSACTION T" + str(toAbort)
-            #print "UPDATED WAITING QUEUE : "   + str(queue.items)
-            break
             cycles = queue.deadlock(sites)
 
     if queue.size()>0:
-        #print "EXECUTING WAITING TRANSACTIONS"
         size = queue.size()
         i = 0
         while not queue.isEmpty() and i<size:
-            #print queue.items
             i = i+1
             op = queue.dequeue()
             if op[0] == 0:
                 res = read(transactions[op[1]],op[2],sites,queue)
                 if res[1] == -1:
+                    if verbose == 1:
+                        print "\nRead Failed : T" + str(op[1])
                     queue.enqueue(op)
                 else:
                     print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
             elif op[0] == 1:
                 res = write(transactions[op[1]],op[2],op[3],sites,queue)
                 if res == -1:
+                    if verbose == 1:
+                        print "\nWrite Failed : T" + str(op[1])
                     queue.enqueue(op)
                 else :
                     if verbose == 1:

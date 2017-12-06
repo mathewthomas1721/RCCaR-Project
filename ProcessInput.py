@@ -42,8 +42,8 @@ If a read is unsuccessful, val will be -1, and location will be -1
 '''
 
 def recoverRead(variable,sites):
-    #print("READING TO RECOVER")
     allAlive = findAlive(variable,sites) #find all sites with variable
+
     for siteIndex in allAlive:
         siteIndex = siteIndex - 1
         if -1 == sites[siteIndex].exLocks[variable] : #check if the transaction has an exLock

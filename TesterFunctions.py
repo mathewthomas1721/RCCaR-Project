@@ -32,8 +32,9 @@ def dump(sites,variable):
 
         #print("DUMPING ALL VALUES OF VARIABLE AT ALL SITES\n")
         for i in range(10):
-            print "\nSITE : " + str(i)
-            print "VARIABLE x" + str(variable) + " VALUE : " + str(sites[i].vals[variable])
+            if variable in sites[i].vars:
+                print "\nSITE : " + str(i)
+                print "VARIABLE x" + str(variable) + " VALUE : " + str(sites[i].vals[variable])
 
 
 '''
@@ -86,16 +87,23 @@ def recover(siteIndex, sites, variables):
     print("\nRECOVERING SITE " + str(siteIndex))
     for site in sites:
         if site.index == siteIndex:
+            stillUnavailable = []
             for variable in site.unavailable:
+
                 readValue = recoverRead(variable,sites)
+
                 if readValue[1] != -1 :
                     recoverWrite(variable,readValue[0],site)
-                    site.unavailable.remove(variable)
+                else :
+                    stillUnavailable.append(variable)
+
+            site.unavailable = list(stillUnavailable)
 
             if site.unavailable == []:
                 site.alive = 1
                 print ("RECOVERED!")
                 return 1
+
             else:
                 print ("PARTIALLY RECOVERED!")
                 site.alive = 0
