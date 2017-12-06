@@ -55,18 +55,6 @@ Terminates a transaction
 #### commit(self,tick,sites)
 
 Commits all operations carried out by the transaction to the database
-### Checks for Input Processing
-#### findAlive(variable,sites)
-Finds all alive sites at which "variable" is present.
-
-Output : Returns list of alive locations where variable is present.
-#### checkLocked(variable,site)
-Checks if a variable at a particular site is locked or not.
-
-Output : Returns tuple of the following format - (lockCode, listOfLocks)
-lockCode is 1 if variable is exlusive locked, 0 if variable is only share locked,
-and -1 if no locks are held.
-listOfLocks is a list of relevant locks on the variable at that site.
 
 ### Queue Class
 
@@ -152,6 +140,18 @@ with recoverRead.
 Output : Returns an integer
 If a write is successful, 1 is returned
 
+### Checks for Input Processing
+#### findAlive(variable,sites)
+Finds all alive sites at which "variable" is present.
+
+Output : Returns list of alive locations where variable is present.
+#### checkLocked(variable,site)
+Checks if a variable at a particular site is locked or not.
+
+Output : Returns tuple of the following format - (lockCode, listOfLocks)
+lockCode is 1 if variable is exlusive locked, 0 if variable is only share locked,
+and -1 if no locks are held.
+listOfLocks is a list of relevant locks on the variable at that site.
 
 ### Tester Functions
 #### dump(sites,variable)
