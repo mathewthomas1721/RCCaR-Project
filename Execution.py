@@ -1,3 +1,10 @@
+'''
+Replicated Concurrency Control and Recovery Project
+Advanced Datbase Systems - Prof. Dennis Shasha
+
+MATHEW THOMAS
+N15690387
+'''
 import sys
 from ReadInput import readInput
 from VariableClasses import Variable

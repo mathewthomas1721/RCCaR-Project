@@ -1,4 +1,11 @@
 '''
+Replicated Concurrency Control and Recovery Project
+Advanced Datbase Systems - Prof. Dennis Shasha
+
+MATHEW THOMAS
+N15690387
+'''
+'''
 readInput(inputString)
 
 Reads input line by line from the file and translates it for processing.

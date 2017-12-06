@@ -1,4 +1,11 @@
 '''
+Replicated Concurrency Control and Recovery Project
+Advanced Datbase Systems - Prof. Dennis Shasha
+
+MATHEW THOMAS
+N15690387
+'''
+'''
 class Variable:
 
 Each instance of Variable corresponds to a variable stored in the database

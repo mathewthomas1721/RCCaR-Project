@@ -1,3 +1,10 @@
+'''
+Replicated Concurrency Control and Recovery Project
+Advanced Datbase Systems - Prof. Dennis Shasha
+
+MATHEW THOMAS
+N15690387
+'''
 from Checks import findAlive, checkLocked
 
 '''

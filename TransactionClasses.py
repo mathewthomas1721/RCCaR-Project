@@ -1,4 +1,11 @@
 '''
+Replicated Concurrency Control and Recovery Project
+Advanced Datbase Systems - Prof. Dennis Shasha
+
+MATHEW THOMAS
+N15690387
+'''
+'''
 class Transaction
 
 Maintains information about individual transactions.

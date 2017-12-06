@@ -1,4 +1,11 @@
 '''
+Replicated Concurrency Control and Recovery Project
+Advanced Datbase Systems - Prof. Dennis Shasha
+
+MATHEW THOMAS
+N15690387
+'''
+'''
 class Site
 
 Each instance of Site corresponds to a site.
@@ -16,7 +23,7 @@ alive : Whether site is alive or not :
         0 -> non-replicated items available
 nonReplicatedVars : list of non-replicated variables at site
 replicatedVars : list of replicated variables at site
-unavailable : list of unavailable variables at site       
+unavailable : list of unavailable variables at site
 '''
 
 class Site:
