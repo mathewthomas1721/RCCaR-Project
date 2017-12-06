@@ -1,6 +1,6 @@
 # Replicated-Concurrency-Control-and-Recovery-Project
 ## Mathew Thomas, N15690387
-## Run the Simulation
+## Running the Simulation
 The program takes a file containing a list of operations separated by newlines as input.
 To run the simulation:
 
