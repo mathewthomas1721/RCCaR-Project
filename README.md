@@ -9,47 +9,8 @@ python Execution.py <filename> <--verbose>
 The user can choose to include the "--verbose" tag or not. A verbose output will include informative comments about transactions being terminated, read/write failures, operations being skipped due to transaction abortion, transaction creation, etc. This fucntionality was mostly intended for debugging.
 
 The code is written in Python 2 and was tested using Python 2.7.14. Please note that running using Python 3 may cause errors due to differences in the print statement syntax.
-## Functions
-
-### Read Input
-#### readInput(inputString)
-Reads in each line of input Returns list of operations
-
-
-### Process Input
-#### read(transaction,variable,sites,queue)
-Attempts to read a particular variable from any alive site. If no replica
-of the variable is alive or if all replicas are locked, the transactions
-waits, ie, is put in a waiting queue.
-
-Output : Returns a tuple of the form (val,location)
-If a read is successful, val will be the returned value, and location will
-be the site from which the value is read.
-If a read is unsuccessful, val will be -1, and location will be -1
-#### write(transaction,variable,value,sites,queue)
-Attempts to write a value to all replicas of a particular variable.
-If any replica is locked, the transaction must wait (as per the available
-copies algorithm).
-
-Output : Returns an integer
-If a write is successful, 1 is returned
-If a write is unsuccessful, -1 is returned
-#### recoverRead(variable,sites)
-Attempts to read a particular variable from any alive site in order to
-perform a synchronizing write upon site recovery.
-If no replica of the variable is alive or if all replicas are exclusive locked, the  recovery waits, ie, is put in a recovery queue.
-
-Output : Returns a tuple of the form (val,location)
-If a read is successful, val will be the returned value, and location will
-be the site from which the value is read.
-If a read is unsuccessful, val will be -1, and location will be -1
-#### recoverWrite(variable,value,site)
-Performs a synchronizing write for site recovery, to be used in tandem
-with recoverRead.
-
-Output : Returns an integer
-If a write is successful, 1 is returned
-### Site Classes
+## Classes
+### Site Class
 Each instance of Site corresponds to a site.
 
 Data Items :
@@ -66,7 +27,7 @@ alive : Whether site is alive or not :
 nonReplicatedVars : list of non-replicated variables at site
 replicatedVars : list of replicated variables at site
 unavailable : list of unavailable variables at site  
-### Transaction Classes
+### Transaction Class
 
 Maintain information about individual transactions.
 
@@ -107,8 +68,8 @@ lockCode is 1 if variable is exlusive locked, 0 if variable is only share locked
 and -1 if no locks are held.
 listOfLocks is a list of relevant locks on the variable at that site.
 
-### Transaction Scheduling
-#### class Queue
+### Queue Class
+
 A simple queue implementation to simulate a waiting queues for
 transactions/operations that are forced to wait.
 
@@ -149,6 +110,47 @@ Returns the youngest transaction in the deadlock cycle, which will be terminated
 to break the deadlock
 
 Output : Returns tNo of the youngest transaction in the deadlock cycle
+
+## Functions
+
+### Read Input
+#### readInput(inputString)
+Reads in each line of input Returns list of operations
+
+
+### Process Input
+#### read(transaction,variable,sites,queue)
+Attempts to read a particular variable from any alive site. If no replica
+of the variable is alive or if all replicas are locked, the transactions
+waits, ie, is put in a waiting queue.
+
+Output : Returns a tuple of the form (val,location)
+If a read is successful, val will be the returned value, and location will
+be the site from which the value is read.
+If a read is unsuccessful, val will be -1, and location will be -1
+#### write(transaction,variable,value,sites,queue)
+Attempts to write a value to all replicas of a particular variable.
+If any replica is locked, the transaction must wait (as per the available
+copies algorithm).
+
+Output : Returns an integer
+If a write is successful, 1 is returned
+If a write is unsuccessful, -1 is returned
+#### recoverRead(variable,sites)
+Attempts to read a particular variable from any alive site in order to
+perform a synchronizing write upon site recovery.
+If no replica of the variable is alive or if all replicas are exclusive locked, the  recovery waits, ie, is put in a recovery queue.
+
+Output : Returns a tuple of the form (val,location)
+If a read is successful, val will be the returned value, and location will
+be the site from which the value is read.
+If a read is unsuccessful, val will be -1, and location will be -1
+#### recoverWrite(variable,value,site)
+Performs a synchronizing write for site recovery, to be used in tandem
+with recoverRead.
+
+Output : Returns an integer
+If a write is successful, 1 is returned
 
 
 ### Tester Functions
