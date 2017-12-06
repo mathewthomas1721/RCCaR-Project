@@ -49,7 +49,51 @@ with recoverRead.
 
 Output : Returns an integer
 If a write is successful, 1 is returned
+### Site Classes
+Each instance of Site corresponds to a site.
 
+Data Items :
+
+index : Site index
+vars : Variables stored at site
+vals : Values of variables stored at site
+exLocks : Exclusive locks on variables at site
+sharedLocks : Shared locks on variables at site
+alive : Whether site is alive or not :
+        1 -> alive
+        -1 -> not alive
+        0 -> non-replicated items available
+nonReplicatedVars : list of non-replicated variables at site
+replicatedVars : list of replicated variables at site
+unavailable : list of unavailable variables at site  
+### Transaction Classes
+
+Maintain information about individual transactions.
+
+startTime : Time at which transaction starts
+tNo : Transaction Number
+exLocks : All exclusive locks that the transaction holds
+sharedLocks : All shared locks that the transaction holds
+opList : All operations that the transaction has performed
+endTime : Time at which the transaction ends, ie, aborts or commits
+RO : 1 if transaction is ReadOnly, -1 if not
+ReadValues : Values of variables when the transaction starts. Used only for
+ReadOnly transactions
+
+#### checkDone()
+
+Checks if the transaction has terminated
+
+Output : Returns False if the transaction is still executing
+Returns True if the transaction has terminated
+
+#### endTransaction(self,tick,sites)
+
+Terminates a transaction
+
+#### commit(self,tick,sites)
+
+Commits all operations carried out by the transaction to the database
 ### Checks for Input Processing
 #### findAlive(variable,sites)
 Finds all alive sites at which "variable" is present.
