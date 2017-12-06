@@ -8,6 +8,12 @@ from Checks import findAlive, checkLocked
 from TransactionClasses import Transaction
 from TesterFunctions import dump, fail, recover
 
+filename = sys.argv[1]
+verbose = 0
+if len(sys.argv) > 2:
+    if sys.argv[2] == "--verbose":
+        verbose = 1
+
 def removeDup(seq):
     seen = set()
     seen_add = seen.add
@@ -28,9 +34,9 @@ transactions = {}
 recoveryQueue = []
 abortedTransactions = []
 waitingTransactions = []
-
+f = open(filename)
 #print("\nTick = " + str(tick) + " Default Variable Values and Sites Created")
-for line in sys.stdin:
+for line in f.readlines():
     print "---------------------------------------------------------------------------------"
     waitingTransactions = []
     for item in queue.items:
@@ -77,7 +83,7 @@ for line in sys.stdin:
             #print "UPDATED WAITING QUEUE : "   + str(queue.items)
             break
             cycles = queue.deadlock(sites)
-    print queue.items
+    #print queue.items
     if queue.size()>0:
         #print "EXECUTING WAITING TRANSACTIONS"
         size = queue.size()
@@ -92,14 +98,16 @@ for line in sys.stdin:
                 if res[1] == -1:
                     queue.enqueue(op)
                 else:
-                    print "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
+                    print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
             elif op[0] == 1:
                 res = write(transactions[op[1]],op[2],op[3],sites,queue)
                 if res == -1:
-                    print "WRITE FAILED : " + str(op[1])
+                    if verbose == 1:
+                        print "WRITE FAILED : " + str(op[1])
                     queue.enqueue(op)
                 else :
-                    print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
+                    if verbose == 1:
+                        print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
 
             elif op[0] == 2:
                 stillWaiting = 0
@@ -110,7 +118,8 @@ for line in sys.stdin:
                 if stillWaiting == 1:
                     queue.enqueue(op)
                 else:
-                    print("Ending Transaction " + str(op[1])+ "\n")
+                    if verbose == 1:
+                        print("Ending Transaction " + str(op[1])+ "\n")
                     transactions[op[1]].commit(tick,sites)
 
     waitingTransactions = []
@@ -123,7 +132,8 @@ for line in sys.stdin:
 
 
     if op[0] in [2,3,7] and op[1] in abortedTransactions:
-        print "Operation Skipped, Transaction already aborted"
+        if verbose == 1:
+            print "Operation Skipped, Transaction has been aborted"
     elif op[0] in [2,3,7] and op[1] in waitingTransactions:
         if op[0] == 2:
             queue.enqueue((0,op[1],op[2]))
@@ -132,15 +142,18 @@ for line in sys.stdin:
         else :
             queue.enqueue((2,op[1]))
 
-        print "\nOperation Skipped, Transaction is Waiting"
+        if verbose == 1:
+            print "\nOperation Skipped, Transaction is Waiting"
 
     elif op[0] == 0 :
-        print("\nTransaction Creation Started")
+        if verbose == 1:
+            print("\nTransaction Creation Started")
         transactions[op[1]] = Transaction(op[1],tick)
 
 
     elif op[0] == 1:
-        print("\nRO Transaction Creation Started")
+        if verbose == 1:
+            print("\nRO Transaction Creation Started")
         transactions[op[1]] = Transaction(op[1],tick)
         transactions[op[1]].RO = 1
         for i in range (10):
@@ -152,53 +165,63 @@ for line in sys.stdin:
     elif op[0] == 2:
         #print("Tick = " + str(tick) + " Read Started : x" + str(op[2]))
         if transactions[op[1]].RO == 1:
-            print "\nVariable : x" + str(op[2]) + "\nValue : " + str(transactions[op[1]].ReadValues[op[2]][0]) + "\nSite : " + str(transactions[op[1]].ReadValues[op[2]][1])
+            print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(transactions[op[1]].ReadValues[op[2]][0]) + "\nSite : " + str(transactions[op[1]].ReadValues[op[2]][1])
         else:
             res = read(transactions[op[1]],op[2],sites,queue)
 
             if res[0] != -1:
-                print "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
+                print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
             else :
-                print "\nCouldn't Read x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
+                if verbose == 1:
+                    print "\nCouldn't Read x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
                 #waitingTransactions.append(op[1])
     elif op[0] == 3:
         #print("\nTick = " + str(tick) + " Write Started : x" + str(op[2]) + " with value " + str(op[3]))
         res = write(transactions[op[1]],op[2],op[3],sites,queue)
         if res == 1:
-            print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
+            if verbose == 1:
+                print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
         elif res == -1:
-            print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
-            print queue.items
+            if verbose == 1:
+                print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
+            #print queue.items
             #waitingTransactions.append(op[1])
 
     elif op[0] == 4:
-        print("\nDump of all variables started\n")
+        if verbose == 1:
+            print("\nDump of all variables started\n")
         dump(sites,-1)
 
     elif op[0] == 5:
-        print("\nDump of all variables at site " + str(op[1])+" started\n")
+        if verbose == 1:
+            print("\nDump of all variables at site " + str(op[1])+" started\n")
         dump([sites[op[1]-1]],-1)
 
     elif op[0] == 6:
-        print("\nDump of variable x" + str(op[1]) + " at all sites started\n")
+        if verbose == 1:
+            print("\nDump of variable x" + str(op[1]) + " at all sites started\n")
         dump(sites,op[1])
 
     elif op[0] == 7:
-        print("\nEnding Transaction " + str(op[1])+ "\n")
+        if verbose == 1:
+            print("\nEnding Transaction " + str(op[1])+ "\n")
         transactions[op[1]].commit(tick,sites)
 
 
     elif op[0] == 8:
-        print("\nFailing Site " + str(op[1]) + "\n")
+        if verbose == 1:
+            print("\nFailing Site " + str(op[1]) + "\n")
         resAborted = fail(op[1], sites,transactions,tick)
         abortedTransactions = abortedTransactions + resAborted
         abortedTransactions = list(set(abortedTransactions))
 
     elif op[0] == 9:
-        print("\nRecovering Site " + str(op[1]))
+        if verbose == 1:
+            print("\nRecovering Site " + str(op[1]))
         recoveryStatus = recover(op[1], sites, variables)
         if recoveryStatus == -1:
-            print "Can't recover yet, will try in subsequent ticks"
+            if verbose == 1:
+                print "Can't recover yet, will try in subsequent ticks"
             recoveryQueue.append(op[1])
     '''for site in sites:
         print site.index, site.sharedLocks'''
@@ -251,7 +274,7 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
         size = queue.size()
         i = 0
         while not queue.isEmpty() and i<size:
-            print queue.items
+            #print queue.items
             i = i+1
             op = queue.dequeue()
             if op[0] == 0:
@@ -259,13 +282,14 @@ while not queue.isEmpty or len(recoveryQueue) != 0:
                 if res[1] == -1:
                     queue.enqueue(op)
                 else:
-                    print "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
+                    print "\nTransaction : T" + str(op[1])+ "\nVariable : x" + str(op[2]) + "\nValue : " + str(res[0]) + "\nSite : " + str(res[1])
             elif op[0] == 1:
                 res = write(transactions[op[1]],op[2],op[3],sites,queue)
                 if res == -1:
                     queue.enqueue(op)
                 else :
-                    print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
+                    if verbose == 1:
+                        print "\nWrite Successful! \nT" + str(op[1]) + "\nVariable : x" + str(op[2]) + "\nValue : " + str(op[3])
             elif op[0] == 2:
                 stillWaiting = 0
                 for item in queue.items:

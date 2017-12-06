@@ -1,5 +1,11 @@
 # Replicated-Concurrency-Control-and-Recovery-Project
+## Run the Simulation
+The program takes a file containing a list of operations separated by newlines as input.
+To run the simulation:
 
+python Execution.py <filename> <--verbose>
+
+The user can choose to include the "--verbose" tag or not. A verbose output will include informative comments about transactions being terminated, read/write failures, operations being skipped due to transaction abortion, transaction creation, etc. This fucntionality was mostly intended for debugging.
 ## Functions
 
 ### Read Input
