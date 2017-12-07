@@ -154,6 +154,8 @@ for line in f.readlines():
         if verbose == 1:
             print("\nTransaction Creation Started")
         transactions[op[1]] = Transaction(op[1],tick)
+        if op[1] in abortedTransactions:
+            abortedTransactions.remove(op[1])
 
 
     elif op[0] == 1:
@@ -165,6 +167,8 @@ for line in f.readlines():
             for var in sites[i].vals:
                 if var not in transactions[op[1]].ReadValues:
                     transactions[op[1]].ReadValues[var] = (sites[i].vals[var],i+1)
+        if op[1] in abortedTransactions:
+            abortedTransactions.remove(op[1])            
 
 
     elif op[0] == 2:
@@ -305,7 +309,7 @@ while not (queue.isEmpty() or len(recoveryQueue) != 0) and keepRunning<=500 : #C
                 else:
                     print("\nEnding Transaction " + str(op[1])+ "\n")
                     transactions[op[1]].commit(tick,sites)
-            
+
 if keepRunning>500:
     if verbose == 1:
         print("\nUNABLE TO COMPLETE TRANSACTIONS IN WAITING QUEUE AFTER 500 TICKS!\nABORTING TRANSACTIONS IN WAITING QUEUE!\n")
