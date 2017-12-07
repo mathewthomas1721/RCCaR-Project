@@ -135,7 +135,7 @@ for line in f.readlines():
     print("\n"+line) #Execute the next operation in the operation list
     op = readInput(line)
 
-
+    #print waitingTransactions
     if op[0] in [2,3,7] and op[1] in abortedTransactions: #Checks if the operation is part of an aborted transaction
         if verbose == 1:
             print "Operation Skipped, Transaction has been aborted"
@@ -191,6 +191,7 @@ for line in f.readlines():
         elif res == -1:
             if verbose == 1:
                 print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
+            print queue.items
 
 
     elif op[0] == 4:
@@ -230,9 +231,9 @@ for line in f.readlines():
                 print "Can't recover yet, will try in subsequent ticks"
             recoveryQueue.append(op[1])
 
-
-while not queue.isEmpty() or len(recoveryQueue) != 0: #Continues running waiting transactions/site recoveries after all operations have been received
-
+keepRunning = 0
+while not (queue.isEmpty() or len(recoveryQueue) != 0) and keepRunning<=500 : #Continues running waiting transactions/site recoveries after all operations have been received
+    keepRunning = keepRunning + 1
     print "---------------------------------------------------------------------------------"
     tick = tick+1
     print "TICK : " + str(tick)
@@ -304,3 +305,11 @@ while not queue.isEmpty() or len(recoveryQueue) != 0: #Continues running waiting
                 else:
                     print("\nEnding Transaction " + str(op[1])+ "\n")
                     transactions[op[1]].commit(tick,sites)
+
+if keepRunning>500:
+    if verbose == 1:
+        print("\nUNABLE TO COMPLETE TRANSACTIONS IN WAITING QUEUE AFTER 500 TICKS!\nABORTING TRANSACTIONS IN WAITING QUEUE!\n")
+        for item in queue.items:
+            print "ABORTING T" + str(item[1])
+            transactions[item[1]].endTransaction(tick,sites) #Aborts youngest transaction in deadlock
+            abortedTransactions.append(item[1])

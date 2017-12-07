@@ -72,6 +72,9 @@ If a write is unsuccessful, -1 is returned
 def write(transaction,variable,value,sites,queue):
     #print("WRITING")
     allAlive = findAlive(variable,sites) #find all sites with variable
+    if allAlive == []:
+        queue.enqueue((1,transaction.tNo,variable,value))
+        return -1
     for siteIndex in allAlive:
         siteIndex = siteIndex-1
         #print sites[siteIndex].exLocks[variable]
