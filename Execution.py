@@ -191,7 +191,7 @@ for line in f.readlines():
         elif res == -1:
             if verbose == 1:
                 print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
-            
+
 
 
     elif op[0] == 4:
@@ -305,11 +305,15 @@ while not (queue.isEmpty() or len(recoveryQueue) != 0) and keepRunning<=500 : #C
                 else:
                     print("\nEnding Transaction " + str(op[1])+ "\n")
                     transactions[op[1]].commit(tick,sites)
-
+            
 if keepRunning>500:
     if verbose == 1:
         print("\nUNABLE TO COMPLETE TRANSACTIONS IN WAITING QUEUE AFTER 500 TICKS!\nABORTING TRANSACTIONS IN WAITING QUEUE!\n")
+
         for item in queue.items:
             print "ABORTING T" + str(item[1])
             transactions[item[1]].endTransaction(tick,sites) #Aborts youngest transaction in deadlock
             abortedTransactions.append(item[1])
+            for inQueue in queue.items: #Removes any operations from the aborted transaction from the waiting queue
+                if inQueue[1] == item[1]:
+                    queue.items.remove(inQueue)
