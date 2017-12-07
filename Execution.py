@@ -191,7 +191,7 @@ for line in f.readlines():
         elif res == -1:
             if verbose == 1:
                 print "Couldn't Write x" + str(op[2]) + ", T" + str(op[1]) + " must wait"
-            print queue.items
+            
 
 
     elif op[0] == 4:
